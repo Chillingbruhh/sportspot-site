@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Join a game · Sportspot</title>
+<meta name="description" content="You've been invited to a pickup game on Sportspot.">
+<meta property="og:title" content="Join my game on Sportspot">
+<meta property="og:description" content="Tap to see the game and pick a team.">
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="style.css">
+<style>
+  .invite { text-align: center; padding-top: 24px; }
+  .invite .ball { font-size: 64px; line-height: 1; }
+  .open { display: block; background: var(--green); color: #fff; text-decoration: none; font-weight: 800;
+          font-size: 18px; border-radius: 16px; padding: 18px; margin: 28px 0 12px; }
+  .note { color: var(--muted); font-size: 15px; }
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+<main>
+<header><div class="logo">S</div><a href="./">Sportspot</a></header>
+
+<div class="invite">
+  <div class="ball">🏟️</div>
+  <h1 id="title">You’re invited to a game</h1>
+  <p class="updated">Open it in Sportspot to see who’s playing and pick a team.</p>
+  <a class="open hidden" id="open" href="#">Open in Sportspot</a>
+  <p class="note" id="note">Don’t have Sportspot yet? It’s coming soon to the App Store and Google Play.</p>
+</div>
+
+<footer><a href="./">Home</a><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms of Use</a></footer>
+</main>
+<script>
+  // join.html?game=<id>            → sportspot://game/<id>   (the real app)
+  // join.html?game=<id>&app=exp:// → that Expo Go address    (testing only)
+  var q = new URLSearchParams(location.search);
+  var game = (q.get('game') || '').toLowerCase();
+  var app = q.get('app') || '';
+  var open = document.getElementById('open');
+  if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(game)) {
+    var testing = /^exps?:\/\/[^\s"'<>]+\/--\/game\/[0-9a-f-]{36}$/i.test(app);
+    open.href = testing ? app : 'sportspot://game/' + game;
+    if (testing) open.textContent = 'Open in Expo Go (testing)';
+    open.classList.remove('hidden');
+  } else {
+    document.getElementById('title').textContent = 'This invite link looks broken';
+    document.getElementById('note').textContent = 'Ask whoever sent it to share the game again.';
+  }
+</script>
+</body>
+</html>
